@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+  <!-- Welcome message -->
+  <category>
+    <pattern>HELLO</pattern>
+    <template>
+      Hey there! Welcome to the ultimate UI/UX icebreaker! Ready for some fun? 🎉
+      Type 'START' to dive in! 😜
+
+      <button>
+        <text>START</text>
+        <postback>START</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Start the icebreaker -->
+  <category>
+    <pattern>START</pattern>
+    <template>
+      Woohoo! 🎉 Let’s have some fun! Type 'READY' when you're ready to answer a couple of quirky questions! 😎
+
+      <button>
+        <text>READY</text>
+        <postback>READY</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Ask the first question -->
+  <category>
+    <pattern>READY</pattern>
+    <template>
+      Awesome! Let’s kick it off! 🎨 Here’s your first question: 
+      If you had to choose, would you make your website so bright it could signal aliens from space, or so minimalist it looks like a single white pixel?
+
+      Type 'ALIEN BRIGHT' or 'WHITE PIXEL' to choose!
+
+      <button>
+        <text>ALIEN BRIGHT</text>
+        <postback>ALIEN BRIGHT</postback>
+      </button>
+      <button>
+        <text>WHITE PIXEL</text>
+        <postback>WHITE PIXEL</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Alien Bright Response -->
+  <category>
+    <pattern>ALIEN BRIGHT</pattern>
+    <template>
+      🌟 You’d go for Alien Bright? Get ready for your website to shine so bright, even extraterrestrials would need sunglasses! 🛸
+      Ready for the next question? Type 'NEXT' to continue!
+
+      <button>
+        <text>NEXT</text>
+        <postback>NEXT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- White Pixel Response -->
+  <category>
+    <pattern>WHITE PIXEL</pattern>
+    <template>
+      🤔 A minimalist genius! Your website is so simple, it might be the homepage of nothingness! But hey, who needs complexity when you can go full Zen? 🧘‍♀️
+      Ready for the next question? Type 'NEXT' to continue!
+
+      <button>
+        <text>NEXT</text>
+        <postback>NEXT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Second Question -->
+  <category>
+    <pattern>NEXT</pattern>
+    <template>
+      Here we go! 🎨 If you were designing a website and had to choose one thing to focus on: Would you make the text so large it could be seen from the moon, or make the navigation so smooth that even a sloth could use it?
+
+      Type 'MOON TEXT' or 'SLOTH NAVIGATION' to choose!
+
+      <button>
+        <text>MOON TEXT</text>
+        <postback>MOON TEXT</postback>
+      </button>
+      <button>
+        <text>SLOTH NAVIGATION</text>
+        <postback>SLOTH NAVIGATION</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Moon Text Response -->
+  <category>
+    <pattern>MOON TEXT</pattern>
+    <template>
+      🌕 Moon Text it is! You’re going all-in on visibility! Your text will be so big, even astronauts in space will be able to read it! 🚀 Forget fonts, this is a full-on declaration to the world! 😂
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Sloth Navigation Response -->
+  <category>
+    <pattern>SLOTH NAVIGATION</pattern>
+    <template>
+      🦥 Sloth Navigation! Slow and steady wins the race, right? Your website will be so smooth, even sloths will find it easy to navigate. 🐢
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Third Question -->
+  <category>
+    <pattern>NEXT</pattern>
+    <template>
+      Here’s another one! 🎉 Would you rather create a website with a color palette so wild that it feels like a neon carnival, or a website so dark it’s like a secret lair of mystery?
+
+      Type 'NEON CARNIVAL' or 'SECRET LAIR' to choose!
+
+      <button>
+        <text>NEON CARNIVAL</text>
+        <postback>NEON CARNIVAL</postback>
+      </button>
+      <button>
+        <text>SECRET LAIR</text>
+        <postback>SECRET LAIR</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Neon Carnival Response -->
+  <category>
+    <pattern>NEON CARNIVAL</pattern>
+    <template>
+      🎉 Neon Carnival it is! Get ready for a website bursting with color and energy, like the world’s wildest theme park! 🎢 Your design will scream fun and excitement! 😎
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Secret Lair Response -->
+  <category>
+    <pattern>SECRET LAIR</pattern>
+    <template>
+      🖤 Secret Lair! Your website will ooze mystery and intrigue, like a hidden base full of secret codes and cryptic designs! 🕵️‍♀️ Are you ready to keep things mysterious?
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Fourth Question -->
+  <category>
+    <pattern>RESTART</pattern>
+    <template>
+      Here’s another fun question! 🎨 Would you rather build a website with animations that are so flashy they need a warning sign, or one with animations so subtle you wonder if they’re even there?
+
+      Type 'FLASHY' or 'SUBTLE' to choose!
+
+      <button>
+        <text>FLASHY</text>
+        <postback>FLASHY</postback>
+      </button>
+      <button>
+        <text>SUBTLE</text>
+        <postback>SUBTLE</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Flashy Response -->
+  <category>
+    <pattern>FLASHY</pattern>
+    <template>
+      💥 Flashy all the way! Your animations are so bold, they practically jump off the screen. Prepare for a wild ride! 😜
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Subtle Response -->
+  <category>
+    <pattern>SUBTLE</pattern>
+    <template>
+      🌱 Subtle is the key! Your animations will blend into the design so perfectly, visitors will hardly notice them—but that’s the magic! 😌
+
+      Ready for another round? Type 'RESTART' to start over or 'EXIT' to finish.
+
+      <button>
+        <text>RESTART</text>
+        <postback>RESTART</postback>
+      </button>
+      <button>
+        <text>EXIT</text>
+        <postback>EXIT</postback>
+      </button>
+    </template>
+  </category>
+
+  <!-- Restart or Exit -->
+  <category>
+    <pattern>EXIT</pattern>
+    <template>
+      Thanks for playing! 🎉 You've made some bold design choices today. Let's start the training! 🚀
+
+     
+    </template>
+  </category>
+
+  <!-- Default response for anything else -->
+  <category>
+    <pattern>*</pattern>
+    <template>
+      Oops! I didn't quite catch that. Try typing 'START' to begin the fun! 😄
+    </template>
+  </category>
+
+</aiml>
