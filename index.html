@@ -3,99 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Poll Results - Tick Shape</title>
+    <title>Live Poll - Tick Shape</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 20px;
+            padding: 20px;
         }
-        .poll-container {
-            margin: 20px auto;
-            max-width: 600px;
+        h1 {
+            color: #4CAF50;
         }
         .tick-shape {
-            margin: 30px auto;
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .answer {
+        .tick-shape div {
             position: absolute;
-            transform: translate(-50%, -50%);
             text-align: center;
             color: white;
-            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .tick-shape .small {
+            background-color: #f44336;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+        }
+        .tick-shape .medium {
+            background-color: #ff9800;
+            font-size: 16px;
+            width: 40px;
+            height: 40px;
+        }
+        .tick-shape .large {
+            background-color: #4CAF50;
+            font-size: 20px;
+            width: 60px;
+            height: 60px;
+        }
+        .poll-options label {
+            display: block;
+            margin: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Live Poll: Favorite Color</h1>
-    <div class="poll-container">
-        <p>Select your favorite color:</p>
-        <form id="poll-form">
-            <label><input type="radio" name="color" value="Red"> Red</label><br>
-            <label><input type="radio" name="color" value="Blue"> Blue</label><br>
-            <label><input type="radio" name="color" value="Green"> Green</label><br>
-            <label><input type="radio" name="color" value="Yellow"> Yellow</label><br>
-            <button type="button" id="submit-button">Submit</button>
-        </form>
-        <div id="results" class="tick-shape">
-            <!-- Tick Shape SVG and Dynamic Content -->
-        </div>
+    <h1>Live Poll - Tick Shape</h1>
+    <p>Choose your favorite UI/UX design preference:</p>
+
+    <div class="poll-options">
+        <label>
+            <input type="radio" name="poll" value="Bright Colors"> Bright Colors
+        </label>
+        <label>
+            <input type="radio" name="poll" value="Minimalist Design"> Minimalist Design
+        </label>
+        <label>
+            <input type="radio" name="poll" value="Bold Fonts"> Bold Fonts
+        </label>
+        <label>
+            <input type="radio" name="poll" value="Smooth Animations"> Smooth Animations
+        </label>
+    </div>
+
+    <button id="submitVote">Submit</button>
+
+    <h2>Live Results</h2>
+    <div class="tick-shape" id="tick-shape">
+        <!-- Results will appear here -->
     </div>
 
     <script>
-        const votes = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
-        const resultsDiv = document.getElementById('results');
+        // Handle vote submission
+        document.getElementById('submitVote').addEventListener('click', () => {
+            const selected = document.querySelector("input[name='poll']:checked");
+            if (selected) {
+                const answer = selected.value;
+                let votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
 
-        document.getElementById('submit-button').addEventListener('click', () => {
-            const selectedOption = document.querySelector('input[name="color"]:checked');
-            if (!selectedOption) {
-                alert('Please select a color before submitting!');
-                return;
+                // Update vote count for the selected option
+                votes[answer] = (votes[answer] || 0) + 1;
+
+                // Store updated votes in localStorage
+                localStorage.setItem('pollVotes', JSON.stringify(votes));
+
+                // Update the UI with the latest poll results
+                updatePollResults();
+            } else {
+                alert('Please select an option before submitting.');
             }
-            votes[selectedOption.value]++;
-            updateResults();
         });
 
-        function updateResults() {
-            resultsDiv.innerHTML = ''; // Clear previous results
-            const totalVotes = Object.values(votes).reduce((a, b) => a + b, 0);
-            const maxVotes = Math.max(...Object.values(votes));
-            const sortedEntries = Object.entries(votes).sort((a, b) => a[1] - b[1]);
+        // Function to update the poll results from localStorage
+        function updatePollResults() {
+            const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
+            const tickShape = document.getElementById("tick-shape");
 
-            // Create SVG tick shape
-            const svgTick = `
-                <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 150 L120 220 L250 80" stroke="green" stroke-width="10" fill="none" />
-                </svg>
-            `;
-            resultsDiv.innerHTML = svgTick;
+            // Clear previous results
+            tickShape.innerHTML = "";
 
-            // Add answers as proportional circles along the tick path
-            const positions = [
-                { x: 50, y: 150 },
-                { x: 120, y: 220 },
-                { x: 250, y: 80 },
-                { x: 190, y: 160 },
-            ];
-            sortedEntries.forEach(([answer, count], index) => {
-                const size = (count / totalVotes) * 100 + 20; // Scale size by proportion
-                const { x, y } = positions[index];
-                const circle = document.createElement('div');
-                circle.className = 'answer';
-                circle.style.width = `${size}px`;
-                circle.style.height = `${size}px`;
-                circle.style.backgroundColor = answer.toLowerCase();
-                circle.style.borderRadius = '50%';
-                circle.style.lineHeight = `${size}px`;
-                circle.style.left = `${x}px`;
-                circle.style.top = `${y}px`;
-                circle.innerText = `${answer}\n${count} votes`;
-                resultsDiv.appendChild(circle);
+            const totalVotes = Object.values(votes).reduce((sum, count) => sum + count, 0);
+
+            // Display the votes in tick shape
+            Object.entries(votes).forEach(([answer, count]) => {
+                const size = count / totalVotes > 0.5 ? "large" : count / totalVotes > 0.2 ? "medium" : "small";
+                const div = document.createElement("div");
+                div.className = size;
+                div.textContent = `${answer} (${count})`;
+                div.style.top = `${Math.random() * 150}px`;
+                div.style.left = `${Math.random() * 150}px`;
+                tickShape.appendChild(div);
             });
         }
+
+        // Initial update of poll results when page loads
+        updatePollResults();
     </script>
 </body>
 </html>
