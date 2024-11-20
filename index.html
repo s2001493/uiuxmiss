@@ -3,105 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UI/UX Icebreaker</title>
+    <title>Live Poll Results - Tick Shape</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
             margin: 20px;
         }
-        #chatbox {
-            width: 80%;
+        .poll-container {
+            margin: 20px auto;
             max-width: 600px;
-            margin: 0 auto;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            background: #fff;
         }
-        #messages {
+        .tick-shape {
+            margin: 30px auto;
+            position: relative;
+            width: 300px;
             height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            text-align: left;
         }
-        #input-section {
-            display: flex;
-            justify-content: space-between;
-        }
-        #user-input {
-            width: 80%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #send-button {
-            padding: 10px 20px;
-            border: none;
-            background: #007BFF;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #send-button:hover {
-            background: #0056b3;
+        .answer {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to the UI/UX Icebreaker Chatbot!</h1>
-    <div id="chatbox">
-        <div id="messages">
-            <p><strong>Chatbot:</strong> Hello! Welcome to the ultimate UI/UX Icebreaker! Type 'START' to begin. 🎉</p>
-        </div>
-        <div id="input-section">
-            <input type="text" id="user-input" placeholder="Type your message...">
-            <button id="send-button">Send</button>
+    <h1>Live Poll: Favorite Color</h1>
+    <div class="poll-container">
+        <p>Select your favorite color:</p>
+        <form id="poll-form">
+            <label><input type="radio" name="color" value="Red"> Red</label><br>
+            <label><input type="radio" name="color" value="Blue"> Blue</label><br>
+            <label><input type="radio" name="color" value="Green"> Green</label><br>
+            <label><input type="radio" name="color" value="Yellow"> Yellow</label><br>
+            <button type="button" id="submit-button">Submit</button>
+        </form>
+        <div id="results" class="tick-shape">
+            <!-- Tick Shape SVG and Dynamic Content -->
         </div>
     </div>
 
     <script>
-        const chatMessages = document.getElementById('messages');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
+        const votes = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
+        const resultsDiv = document.getElementById('results');
 
-        // Simulate a simple chatbot response logic
-        const responses = {
-            "HELLO": "Hey there! Welcome to the ultimate UI/UX icebreaker! Ready for some fun? Type 'START' to dive in! 🎉",
-            "START": "Woohoo! 🎉 Let’s have some fun! Type 'READY' when you're ready to answer a couple of quirky questions! 😎",
-            "READY": "If you had to choose, would you make your website so bright it could signal aliens from space, or so minimalist it looks like a single white pixel? Type 'ALIEN BRIGHT' or 'WHITE PIXEL'.",
-            "ALIEN BRIGHT": "🌟 You’d go for Alien Bright? Get ready for your website to shine so bright, even extraterrestrials would need sunglasses! 🛸 Type 'NEXT' for the next question.",
-            "WHITE PIXEL": "🤔 A minimalist genius! Your website is so simple, it might be the homepage of nothingness! Type 'NEXT' for the next question.",
-            "NEXT": "Would you make the text so large it could be seen from the moon, or make the navigation so smooth that even a sloth could use it? Type 'MOON TEXT' or 'SLOTH NAVIGATION'.",
-            "MOON TEXT": "🌕 Moon Text it is! Your text will be so big, even astronauts in space will be able to read it! 🚀 Type 'RESTART' to play again or 'EXIT' to finish.",
-            "SLOTH NAVIGATION": "🦥 Sloth Navigation! Slow and steady wins the race! Type 'RESTART' to play again or 'EXIT' to finish.",
-            "RESTART": "Let's start over! Type 'HELLO' to begin.",
-            "EXIT": "Thanks for playing! 🎉 Have a great day!"
-        };
-
-        sendButton.addEventListener('click', () => {
-            const userText = userInput.value.toUpperCase().trim();
-            if (!userText) return;
-
-            // Add user's message to chat
-            addMessage('User', userText);
-
-            // Generate chatbot's response
-            const botResponse = responses[userText] || "Oops! I didn't understand that. Try typing 'HELLO' to start again.";
-            addMessage('Chatbot', botResponse);
-
-            // Clear user input
-            userInput.value = '';
+        document.getElementById('submit-button').addEventListener('click', () => {
+            const selectedOption = document.querySelector('input[name="color"]:checked');
+            if (!selectedOption) {
+                alert('Please select a color before submitting!');
+                return;
+            }
+            votes[selectedOption.value]++;
+            updateResults();
         });
 
-        function addMessage(sender, message) {
-            const messageElement = document.createElement('p');
-            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
+        function updateResults() {
+            resultsDiv.innerHTML = ''; // Clear previous results
+            const totalVotes = Object.values(votes).reduce((a, b) => a + b, 0);
+            const maxVotes = Math.max(...Object.values(votes));
+            const sortedEntries = Object.entries(votes).sort((a, b) => a[1] - b[1]);
+
+            // Create SVG tick shape
+            const svgTick = `
+                <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 150 L120 220 L250 80" stroke="green" stroke-width="10" fill="none" />
+                </svg>
+            `;
+            resultsDiv.innerHTML = svgTick;
+
+            // Add answers as proportional circles along the tick path
+            const positions = [
+                { x: 50, y: 150 },
+                { x: 120, y: 220 },
+                { x: 250, y: 80 },
+                { x: 190, y: 160 },
+            ];
+            sortedEntries.forEach(([answer, count], index) => {
+                const size = (count / totalVotes) * 100 + 20; // Scale size by proportion
+                const { x, y } = positions[index];
+                const circle = document.createElement('div');
+                circle.className = 'answer';
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.backgroundColor = answer.toLowerCase();
+                circle.style.borderRadius = '50%';
+                circle.style.lineHeight = `${size}px`;
+                circle.style.left = `${x}px`;
+                circle.style.top = `${y}px`;
+                circle.innerText = `${answer}\n${count} votes`;
+                resultsDiv.appendChild(circle);
+            });
         }
     </script>
 </body>
