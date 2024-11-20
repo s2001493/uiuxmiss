@@ -3,139 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Poll - Tick Shape</title>
+    <title>Live Polling with Firebase</title>
+    <!-- Firebase App SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <!-- Firebase Realtime Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <!-- Firebase Analytics SDK (optional) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
         }
-        h1 {
-            color: #4CAF50;
-        }
-        .tick-shape {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            background-color: #f0f0f0;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .tick-shape div {
-            position: absolute;
-            text-align: center;
+        header {
+            background-color: #333;
             color: white;
-            border-radius: 50%;
+            text-align: center;
+            padding: 1em;
+        }
+        .poll-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            margin-top: 30px;
         }
-        .tick-shape .small {
-            background-color: #f44336;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-        }
-        .tick-shape .medium {
-            background-color: #ff9800;
-            font-size: 16px;
-            width: 40px;
-            height: 40px;
-        }
-        .tick-shape .large {
-            background-color: #4CAF50;
-            font-size: 20px;
-            width: 60px;
-            height: 60px;
-        }
-        .poll-options label {
-            display: block;
+        .poll-option {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
             margin: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
         }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
+        .poll-option:hover {
+            transform: scale(1.05);
+        }
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .result {
             background-color: #4CAF50;
             color: white;
-            border: none;
-            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            width: 200px;
+            text-align: center;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <h1>Live Poll - Tick Shape</h1>
-    <p>Choose your favorite UI/UX design preference:</p>
 
-    <div class="poll-options">
-        <label>
-            <input type="radio" name="poll" value="Bright Colors"> Bright Colors
-        </label>
-        <label>
-            <input type="radio" name="poll" value="Minimalist Design"> Minimalist Design
-        </label>
-        <label>
-            <input type="radio" name="poll" value="Bold Fonts"> Bold Fonts
-        </label>
-        <label>
-            <input type="radio" name="poll" value="Smooth Animations"> Smooth Animations
-        </label>
-    </div>
+<header>
+    <h1>Live Polling App</h1>
+</header>
 
-    <button id="submitVote">Submit</button>
+<div class="poll-container">
+    <div class="poll-option" onclick="submitVote('Option 1')">Option 1</div>
+    <div class="poll-option" onclick="submitVote('Option 2')">Option 2</div>
+    <div class="poll-option" onclick="submitVote('Option 3')">Option 3</div>
+</div>
 
-    <h2>Live Results</h2>
-    <div class="tick-shape" id="tick-shape">
-        <!-- Results will appear here -->
-    </div>
+<div class="results-container">
+    <h2>Live Poll Results</h2>
+    <div id="poll-results"></div>
+</div>
 
-    <script>
-        // Handle vote submission
-        document.getElementById('submitVote').addEventListener('click', () => {
-            const selected = document.querySelector("input[name='poll']:checked");
-            if (selected) {
-                const answer = selected.value;
-                let votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
+<!-- Firebase Configuration -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBEFKMGZpvtI59-7RrCvdmJL8PB4lpnVK4",
+    authDomain: "uiuxmiss.firebaseapp.com",
+    databaseURL: "https://uiuxmiss-default-rtdb.firebaseio.com",
+    projectId: "uiuxmiss",
+    storageBucket: "uiuxmiss.firebasestorage.app",
+    messagingSenderId: "710184349693",
+    appId: "1:710184349693:web:8b6bd16d9ba213a0957394",
+    measurementId: "G-4E382MM9BP"
+  };
 
-                // Update vote count for the selected option
-                votes[answer] = (votes[answer] || 0) + 1;
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const database = firebase.database(app);
 
-                // Store updated votes in localStorage
-                localStorage.setItem('pollVotes', JSON.stringify(votes));
+  const pollRef = database.ref('polls/answers');
 
-                // Update the UI with the latest poll results
-                updatePollResults();
-            } else {
-                alert('Please select an option before submitting.');
-            }
-        });
+  // Function to submit vote
+  function submitVote(answer) {
+    pollRef.push({
+      answer: answer,
+      timestamp: Date.now()
+    });
+  }
 
-        // Function to update the poll results from localStorage
-        function updatePollResults() {
-            const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
-            const tickShape = document.getElementById("tick-shape");
+  // Function to display results
+  function displayResults(answers) {
+    const resultsContainer = document.getElementById('poll-results');
+    resultsContainer.innerHTML = ''; // Clear previous results
 
-            // Clear previous results
-            tickShape.innerHTML = "";
+    for (let answer in answers) {
+      const resultElement = document.createElement('div');
+      resultElement.classList.add('result');
+      resultElement.innerText = `${answer}: ${answers[answer]} votes`;
+      resultsContainer.appendChild(resultElement);
+    }
+  }
 
-            const totalVotes = Object.values(votes).reduce((sum, count) => sum + count, 0);
+  // Fetch and listen for changes in poll data
+  pollRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    let answers = {};
 
-            // Display the votes in tick shape
-            Object.entries(votes).forEach(([answer, count]) => {
-                const size = count / totalVotes > 0.5 ? "large" : count / totalVotes > 0.2 ? "medium" : "small";
-                const div = document.createElement("div");
-                div.className = size;
-                div.textContent = `${answer} (${count})`;
-                div.style.top = `${Math.random() * 150}px`;
-                div.style.left = `${Math.random() * 150}px`;
-                tickShape.appendChild(div);
-            });
-        }
+    for (let id in data) {
+      const answer = data[id].answer;
+      answers[answer] = answers[answer] ? answers[answer] + 1 : 1;
+    }
 
-        // Initial update of poll results when page loads
-        updatePollResults();
-    </script>
+    displayResults(answers); // Update the results display
+  });
+</script>
+
 </body>
 </html>
